@@ -5,16 +5,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.*;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MyActivity extends Activity {
     private TextView batteryInfo;
@@ -44,30 +46,26 @@ public class MyActivity extends Activity {
             String  technology= intent.getExtras().getString(BatteryManager.EXTRA_TECHNOLOGY);
             int  temperature= intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0);
             int  voltage= intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
+            PackageManager appInfo = getPackageManager();
+            List<ApplicationInfo> list = appInfo.getInstalledApplications(0);
 
-            String appName ="";
-            String pName ="";
-            String versionName ="";
-            int versionCode = 0;
-            Drawable icon;
-            List<PackageInfo> packs = getPackageManager().getInstalledPackages(0);
-
-            for(int i=0;i<packs.size();i++) {
-                PackageInfo p = packs.get(i);
-                appName = p.applicationInfo.loadLabel(getPackageManager()).toString();
-                pName = p.packageName;
-                versionName = p.versionName;
-                versionCode = p.versionCode;
-                icon = p.applicationInfo.loadIcon(getPackageManager());
-
-
-
+            Drawable icon ;
+            Drawable logo ;
+            CharSequence label = "" ;
+            ArrayList<CharSequence> lstChrS = new ArrayList<CharSequence>();
+            ArrayList<Drawable> lstDraw = new ArrayList<Drawable>();
+            for(ApplicationInfo applicationInfo : list){
+                icon = getPackageManager().getApplicationIcon(applicationInfo);
+                label = getPackageManager().getApplicationLabel(applicationInfo);
+                logo = getPackageManager().getApplicationLogo(applicationInfo);
+                lstDraw.add(icon);
+                lstDraw.add(logo);
+                lstChrS.add(label);
             }
 
 
             batteryInfo.setText(
                     "Health: "+health+"\n"+
-                            "Icon Small:"+icon_small+"\n"+
                             "Level: "+level+"\n"+
                             "Plugged: "+plugged+"\n"+
                             "Present: "+present+"\n"+
@@ -75,11 +73,9 @@ public class MyActivity extends Activity {
                             "Status: "+status+"\n"+
                             "Technology: "+technology+"\n"+
                             "Temperature: "+temperature+"\n"+
-                            "Voltage: "+voltage+"\n"+
-                            "appName: "+appName+"\n"+
-                            "pName: "+pName+"\n"+
-                            "vName: "+versionName+"\n"+
-                            "vCode: "+versionCode+"\n");
+                            "Label: "+lstChrS+"\n"+
+                            "Drawlable: "+lstDraw+"\n"+
+                            "Voltage: "+voltage+"\n");
 
             imageBatteryState.setImageResource(icon_small);
         }
