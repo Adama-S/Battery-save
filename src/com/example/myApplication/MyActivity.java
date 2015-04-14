@@ -65,17 +65,18 @@ public class MyActivity extends Activity {
 
 
             batteryInfo.setText(
-                    "Health: "+health+"\n"+
+//                    "Health: "+health+"\n"+
                             "Level: "+level+"\n"+
                             "Plugged: "+plugged+"\n"+
                             "Present: "+present+"\n"+
-                            "Scale: "+scale+"\n"+
-                            "Status: "+status+"\n"+
+                            "Voltage: "+voltage+"\n"+
+//                            "Scale: "+scale+"\n"+
+//                            "Status: "+status+"\n"+
                             "Technology: "+technology+"\n"+
                             "Temperature: "+temperature+"\n"+
                             "Label: "+lstChrS+"\n"+
-                            "Drawlable: "+lstDraw+"\n"+
-                            "Voltage: "+voltage+"\n");
+                            "Drawlable: "+lstDraw+"\n");
+
 
             imageBatteryState.setImageResource(icon_small);
         }
