@@ -8,13 +8,12 @@ import android.content.IntentFilter;
 import android.content.pm.ResolveInfo;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
+
 import java.util.*;
 
 public class MyActivity extends Activity {
@@ -27,9 +26,25 @@ public class MyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        //button saving energy
+        Button bSaving = (Button)findViewById(R.id.button);
+        bSaving.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyActivity.this, Choice.class);
+                startActivity(intent);
+            }
+        });
+
+
+        //information of battery
         batteryInfo=(TextView)findViewById(R.id.textViewBatteryInfo);
         imageBatteryState=(ImageView)findViewById(R.id.imageViewBatteryState);
 
+
+        //list of applications
         loadApps();
 
         this.registerReceiver(this.pluggedReceiver,	new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -60,16 +75,50 @@ public class MyActivity extends Activity {
             int  temperature= intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0);
             int  voltage= intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
 
+            String sPlugged = "";
+            if (plugged == BatteryManager.BATTERY_PLUGGED_AC) {
+                sPlugged = "In load (AC)";
+            } else if (plugged == BatteryManager.BATTERY_PLUGGED_USB) {
+                sPlugged = "In load (USB)";
+            } else if (plugged == 0) {
+                sPlugged = "Battery mode";
+            } else {
+                sPlugged = "Unknown";
+            }
+
+
+            //Santé de la batterie
+            String sHealth = "";
+            switch (health) {
+                case BatteryManager.BATTERY_HEALTH_DEAD:
+                    sHealth = "Dead";
+                    break;
+                case BatteryManager.BATTERY_HEALTH_GOOD:
+                    sHealth = "Good";
+                    break;
+                case BatteryManager.BATTERY_HEALTH_OVERHEAT:
+                    sHealth = "In overheating";
+                    break;
+                case BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE:
+                    sHealth = "Overvoltage";
+                    break;
+                case BatteryManager.BATTERY_HEALTH_COLD:
+                    sHealth = "Cold";
+                    break;
+                default:
+                    sHealth = "Non spécifié";
+                    break;
+            }
+
+
+
             batteryInfo.setText(
-                            "Health: "+health+"\n"+
+                            "Health: "+sHealth+"\n"+
                             "Level: "+level+"\n"+
-                            "Plugged: "+plugged+"\n"+
-                            "Present: "+present+"\n"+
-                            "Voltage: "+voltage+"\n"+
-                            "Scale: "+scale+"\n"+
-                            "Status: "+status+"\n"+
+                            "Plugged: "+sPlugged+"\n"+
+                            "Voltage: "+String.valueOf((float) voltage / 1000) + " V"+"\n"+
                             "Technology: "+technology+"\n"+
-                            "Temperature: "+temperature+"\n"
+                            "Temperature: "+String.valueOf((float) temperature / 10) + " C"+"\n"
 
             );
 
