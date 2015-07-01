@@ -8,12 +8,10 @@ import android.content.IntentFilter;
 import android.content.pm.ResolveInfo;
 import android.os.BatteryManager;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-
 import java.util.*;
 
 public class MyActivity extends Activity {
