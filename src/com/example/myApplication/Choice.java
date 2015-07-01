@@ -87,8 +87,7 @@ public class Choice extends Activity {
         Notification noti = new Notification.Builder(this)
                 .setContentTitle(title)
                 .setContentText(description).setSmallIcon(R.mipmap.ic_batterysave)
-                .setContentIntent(pIntent)
-                .addAction(R.mipmap.ic_batterysave, "Go", pIntent).build();
+                .setContentIntent(pIntent).build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // hide the notification after its selected
         noti.flags |= Notification.FLAG_AUTO_CANCEL;
